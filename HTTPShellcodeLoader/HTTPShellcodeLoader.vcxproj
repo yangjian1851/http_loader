@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{7a4652d3-77fe-4cb6-93f4-ed8dba6850a7}</ProjectGuid>
-    <RootNamespace>http_loader</RootNamespace>
+    <RootNamespace>HTTPShellcodeLoader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -141,10 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="http_loader.cpp" />
+    <ClCompile Include="HTTPShellcodeLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="http_loader.h" />
+    <ClInclude Include="HTTPShellcodeLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
