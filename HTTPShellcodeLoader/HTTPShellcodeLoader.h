@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <ShlObj_core.h>
 #pragma comment(lib, "libcurl.lib")
 #pragma comment ( lib, "ws2_32.lib" )
 #pragma comment ( lib, "wldap32.lib" )
